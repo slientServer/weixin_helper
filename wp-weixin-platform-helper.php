@@ -16,6 +16,8 @@ define('WPWPH_GENERAL_PAGE', 'wpwph_general_page');
 define('WPWPH_SETTINGS_PAGE', 'wpwph_settings_page');
 define('WPWPH_HISTORY_PAGE', 'wpwph_history_page');
 define('DB_TABLE_WPWPH_HISTORY', 'weixin_platform_helper_history');
+define('COUNT_PER_PAGE', 5);
+
 
 //Weixin Interface
 $options=get_option(WPWPH_SETTINGS_OPTION);
@@ -37,9 +39,10 @@ function create_history_table(){
     $sql = "CREATE TABLE $table_name (
     id bigint(20) NOT NULL KEY AUTO_INCREMENT,  
     openid   varchar(100) NOT NULL,
-    keyword  varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-    is_match char(1)   NOT NULL,
-    time     datetime  NOT NULL
+    content  varchar(2500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+    msgType varchar(10)   NOT NULL,
+    msgId varchar(30)   NOT NULL,
+    createTime  varchar(15)  NOT NULL
     );";
     
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

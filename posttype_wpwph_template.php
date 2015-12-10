@@ -1,6 +1,6 @@
 <?php
 // 定制post模板
-custom_posttype_wpwsl_template();
+custom_posttype_wpwph_template();
 
 function custom_posttype_wpwph_template() {
 	//Set up labels
