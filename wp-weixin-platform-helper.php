@@ -16,7 +16,7 @@ define('WPWPH_GENERAL_PAGE', 'wpwph_general_page');
 define('WPWPH_SETTINGS_PAGE', 'wpwph_settings_page');
 define('WPWPH_HISTORY_PAGE', 'wpwph_history_page');
 define('DB_TABLE_WPWPH_HISTORY', 'weixin_platform_helper_history');
-define('COUNT_PER_PAGE', 5);
+define('COUNT_PER_PAGE', 10);
 
 
 //Weixin Interface

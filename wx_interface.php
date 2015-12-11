@@ -93,11 +93,11 @@ class wechatCallbackapi{
 			switch ($postObj->MsgType) {
 				case 'text':
 					$messageRow = array(
-							"openid"=>$postObj->FromUserName,
-	                        "content"=>trim($postObj->Content),
-	                        "msgType"=>$postObj->MsgType,
-	                        "msgId"=>$postObj->MsgId,
-	                        "createTime"=>$postObj->CreateTime);
+						"openid"=>$postObj->FromUserName,
+	                    "content"=>trim($postObj->Content),
+	                    "msgType"=>$postObj->MsgType,
+	                    "msgId"=>$postObj->MsgId,
+	                    "createTime"=>$postObj->CreateTime);
 					break;
 				case 'image':
 					$messageRow = array(

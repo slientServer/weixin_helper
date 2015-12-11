@@ -105,26 +105,13 @@ class WPWPH_History_Table extends WP_List_Table {
 	    $wpdb->query("delete from ".$this->db_table);
 	}
 	
-	public function prepare_items() {
+	public function prepare_items($data) {
+		global $wpdb;
 		$request_total_count=10;
-		$paged = isset($_GET['paged']) ? $_GET['paged'] : 1;
-		$start = ($paged-1)*$request_total_count;
-		$order= $this->results_order();
 		$columns = $this->get_columns();
         $hidden = array();
         $sortable = $this->get_sortable_columns();
 		$this->_column_headers = array($columns, $hidden, $sortable);
-		global $wpdb;
-		$rawData= $wpdb->get_results('select id, openid, content, msgType, msgId, createTime from '.$this->db_table.' order by '.$order.' limit '.$start.','.$request_total_count);
-		$data= array();
-		foreach($rawData as $d){
-		 $data[]=array('id'=> $d->id, 'openid'=>$d->openid, 'content'=>$d->content, 'msgType' =>$d->msgType, 'msgId'=>$d->msgId, 'createTime'=>$d->createTime);
-		}
-		$total = $wpdb->get_results('select count(id) as total from '.$this->db_table);
-		$this->set_pagination_args( array(
-				'total_items' => $total[0]->total,                  //WE have to calculate the total number of items
-				'per_page'    => $request_total_count                    //WE have to determine how many items to show on a page
-				));
 		$this->items  = $data;
 	}
 }
