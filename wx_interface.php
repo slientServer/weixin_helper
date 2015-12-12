@@ -71,7 +71,7 @@ class wechatCallbackapi{
         }
     }
 
-    private function getHanderedData(){
+    private function getHandleredData(){
     	$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
 
     	//提取数据
@@ -88,13 +88,13 @@ class wechatCallbackapi{
     }
 
 	public function saveMsgHistory(){
-		$postObj= $this->getHanderedData();
+		$postObj= $this->getHandleredData();
 		if($postObj){
 			switch ($postObj->MsgType) {
 				case 'text':
 					$messageRow = array(
 						"openid"=>$postObj->FromUserName,
-	                    "content"=>trim($postObj->Content),
+	                    "content"=>'{Content:'.trim($postObj->Content).'}',
 	                    "msgType"=>$postObj->MsgType,
 	                    "msgId"=>$postObj->MsgId,
 	                    "createTime"=>$postObj->CreateTime);
@@ -102,7 +102,7 @@ class wechatCallbackapi{
 				case 'image':
 					$messageRow = array(
 						"openid"=>$postObj->FromUserName,
-	                    "content"=>($postObj->PicUrl.'$$'.$postObj->MediaId),
+	                    "content"=>'{PicUrl:'.$postObj->PicUrl.', MediaId:'.$postObj->MediaId.'}',
 	                    "msgType"=>$postObj->MsgType,
 	                    "msgId"=>$postObj->MsgId,
 	                    "createTime"=>$postObj->CreateTime
@@ -111,7 +111,7 @@ class wechatCallbackapi{
 				case 'voice':
 					$messageRow = array(
 						"openid"=>$postObj->FromUserName,
-	                    "content"=>($postObj->Format.'$$'.$postObj->MediaId),
+	                    "content"=>'{Format:'.$postObj->Format.', MediaId:'.$postObj->MediaId.'}',
 	                    "msgType"=>$postObj->MsgType,
 	                    "msgId"=>$postObj->MsgId,
 	                    "createTime"=>$postObj->CreateTime
@@ -120,7 +120,7 @@ class wechatCallbackapi{
 				case 'video':
 					$messageRow = array(
 						"openid"=>$postObj->FromUserName,
-	                    "content"=>($postObj->ThumbMediaId.'$$'.$postObj->MediaId),
+	                    "content"=>'{ThumbMediaId:'.$postObj->ThumbMediaId.', MediaId:'.$postObj->MediaId.'}',
 	                    "msgType"=>$postObj->MsgType,
 	                    "msgId"=>$postObj->MsgId,
 	                    "createTime"=>$postObj->CreateTime
@@ -129,7 +129,7 @@ class wechatCallbackapi{
 				case 'shortvideo':
 					$messageRow = array(
 						"openid"=>$postObj->FromUserName,
-	                    "content"=>($postObj->ThumbMediaId.'$$'.$postObj->MediaId),
+	                    "content"=>'{ThumbMediaId:'.$postObj->ThumbMediaId.', MediaId:'.$postObj->MediaId.'}',
 	                    "msgType"=>$postObj->MsgType,
 	                    "msgId"=>$postObj->MsgId,
 	                    "createTime"=>$postObj->CreateTime
@@ -138,7 +138,7 @@ class wechatCallbackapi{
 				case 'location':
 					$messageRow = array(
 						"openid"=>$postObj->FromUserName,
-	                    "content"=>($postObj->Location_X.'$$'.$postObj->Location_Y.'$$'.$postObj->Scale.'$$'.$postObj->Label),
+	                    "content"=>'{Location_X:'.$postObj->Location_X.', Location_Y:'.$postObj->Location_Y.', Scale:'.$postObj->Scale.', Label:'.$postObj->Label.'}',
 	                    "msgType"=>$postObj->MsgType,
 	                    "msgId"=>$postObj->MsgId,
 	                    "createTime"=>$postObj->CreateTime
@@ -147,20 +147,88 @@ class wechatCallbackapi{
 				case 'link':
 					$messageRow = array(
 						"openid"=>$postObj->FromUserName,
-	                    "content"=>($postObj->Title.'$$'.$postObj->Description.'$$'.$postObj->url),
+	                    "content"=>'{Title:'.$postObj->Title.', Description:'.$postObj->Description.', url:'.$postObj->url.'}',
 	                    "msgType"=>$postObj->MsgType,
 	                    "msgId"=>$postObj->MsgId,
 	                    "createTime"=>$postObj->CreateTime
 						);
-					break;	
+					break;
+				case 'event':
+					$messageRow= $this->saveEventMsg($postObj);
+					break;
 				default:
 					# code...
 					break;
 			}
 		}
-	  
 	    global $wpdb;
-		$rows_affected = $wpdb->insert(DB_TABLE_WPWPH_HISTORY,$messageRow);
+		$rows_affected = $wpdb->insert(DB_TABLE_WPWPH_HISTORY, $messageRow);
+	}
+
+	private function saveEventMsg($postObj){
+		switch ($postObj->Event) {
+			case 'subscribe':
+			case 'unsubscribe':
+				if(isset($postObj->EventKey)){
+					$messageRow = array(
+						"openid"=>$postObj->FromUserName,
+	                    "content"=>'{Event:'.$postObj->Event.', EventKey:'.$postObj->EventKey.', Ticket:'.$postObj->Ticket.'}',
+	                    "msgType"=>$postObj->MsgType,
+	                    "msgId"=>$postObj->Event,
+	                    "createTime"=>$postObj->CreateTime
+						);//未关注扫描二维码关注
+				}else{
+					$messageRow = array(
+						"openid"=>$postObj->FromUserName,
+	                    "content"=>'{Event:'.$postObj->Event.'}',
+	                    "msgType"=>$postObj->MsgType,
+	                    "msgId"=>$postObj->Event,
+	                    "createTime"=>$postObj->CreateTime
+						);//关注
+				}
+				break;
+			case 'SCAN':
+				$messageRow = array(
+						"openid"=>$postObj->FromUserName,
+	                    "content"=>'{Event:'.$postObj->Event.', EventKey:'.$postObj->EventKey.', Ticket:'.$postObj->Ticket.'}',
+	                    "msgType"=>$postObj->MsgType,
+	                    "msgId"=>$postObj->Event,
+	                    "createTime"=>$postObj->CreateTime
+						);//已关注扫描二维码
+				break;	
+			case 'LOCATION':
+				$messageRow = array(
+						"openid"=>$postObj->FromUserName,
+	                    "content"=>'{Event:'.$postObj->Event.', Latitude:'.$postObj->Latitude.', Longitude:'.$postObj->Longitude.', Precision:'.$postObj->Precision.'}',
+	                    "msgType"=>$postObj->MsgType,
+	                    "msgId"=>$postObj->Event,
+	                    "createTime"=>$postObj->CreateTime
+						);
+				break;
+			case 'CLICK':
+				$messageRow = array(
+						"openid"=>$postObj->FromUserName,
+	                    "content"=>'{Event:'.$postObj->Event.', EventKey:'.$postObj->EventKey.'}',
+	                    "msgType"=>$postObj->MsgType,
+	                    "msgId"=>$postObj->Event,
+	                    "createTime"=>$postObj->CreateTime
+						);
+				break;
+			case 'VIEW':
+				$messageRow = array(
+						"openid"=>$postObj->FromUserName,
+	                    "content"=>'{Event:'.$postObj->Event.', EventKey:'.$postObj->EventKey.'}',
+	                    "msgType"=>$postObj->MsgType,
+	                    "msgId"=>$postObj->Event,
+	                    "createTime"=>$postObj->CreateTime
+						);
+				break;
+			default:
+				# code...
+				break;
+		}
+		return $messageRow;
+
 	}
 
 	private function checkSignature(){
