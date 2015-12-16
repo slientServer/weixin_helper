@@ -249,4 +249,57 @@ class wechatCallbackapi{
 		}
 	}
 }
+
+function get_data(){
+	$args = array(
+			'post_type' => 'wpwph_template',
+			'posts_per_page' => -1,
+			'orderby' => 'date',
+			'post_status' => 'publish',
+			'order'=> 'DESC'
+	);
+	
+	$raw=get_posts($args);
+
+	$data = array();
+	
+	foreach($raw as $p){
+
+		$_gp=get_post_meta($p->ID,'_phmsg_item');
+		$phmsg_group=array();
+		
+		foreach($_gp as $_item){
+			$_tmp_item=json_decode($_item);
+			
+			$_tmp_item->title=urldecode($_tmp_item->title);
+			$_tmp_item->pic=urldecode($_tmp_item->pic);
+			$_tmp_item->des=urldecode($_tmp_item->des);
+			$_tmp_item->url=urldecode($_tmp_item->url);
+		
+			$phmsg_group[]=$_tmp_item;
+		}
+		$tmp_key=trim(get_post_meta($p->ID,'_keyword',TRUE));
+		$array_key=explode(',', $tmp_key);
+		
+		
+		$tmp_msg=new stdClass();
+		
+		$tmp_msg->title=$p->post_title;
+		$tmp_msg->type=get_post_meta($p->ID,'_type',TRUE);
+		$tmp_msg->key=$array_key;
+		$tmp_msg->trigger=get_post_meta($p->ID,'_trigger',TRUE);
+		$tmp_msg->msg=get_post_meta($p->ID,'_content',TRUE);
+		$tmp_msg->phmsg=$phmsg_group;
+		
+		//response source
+		$tmp_msg->remsg=array(
+			                  "type"=>get_post_meta($p->ID,'_re_type',TRUE),
+			                  "cate"=>get_post_meta($p->ID,'_re_cate',TRUE),
+			                  "count"=>get_post_meta($p->ID,'_re_count',TRUE)
+			                  );
+
+    $data[]=$tmp_msg;
+	}
+	return $data;
+}
 ?>

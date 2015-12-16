@@ -26,7 +26,7 @@ class WPWPH_History_Table extends WP_List_Table {
         
         //Build row actions
         $actions = array(
-            'delete' => sprintf('<a href="?page=%s&action=%s&record[]=%s">删除</a>',$_REQUEST['page'],'delete',$item['id'])
+            'delete' => sprintf('<a href="?page=%s&action=%s&record[]=%s">'.__("删除", "WPWPH").'</a>',$_REQUEST['page'],'delete',$item['id'])
         );
         
         //Return the openId contents
