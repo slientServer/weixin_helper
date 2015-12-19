@@ -33,7 +33,7 @@ add_action('parse_request', 'load_wx_interface');
 function load_wx_interface(){
     global $token;
     if($token!='' && isset($_GET[$token])){
-    	require( 'wx_interface.php' );
+    	require('wx_interface.php' );
     }
 }
 

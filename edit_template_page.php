@@ -2,10 +2,8 @@
 
 //添加、编辑模板
 function redirect(){
-	$redirect = '<script type="text/javascript">';
-	$redirect .= 'window.location = "' . menu_page_url(WPWPH_TEMPLATE_PAGE,false). '"';
-	$redirect .= '</script>';
-	echo $redirect;
+	header("Location:".menu_page_url(WPWPH_TEMPLATE_PAGE,false));
+	exit();
 }
 
 if(isset($_GET['action']) && $_GET['action']== 'edit' && isset($_GET['record'])){
@@ -27,7 +25,7 @@ if(isset($_GET['delete'])){
  * 保存模板
  */
 
-if(isset($_POST['submit-save-exit']) || isset($_POST['submit-save'])){
+if(isset($_POST['submit-save']) || isset($_POST['submit-save-back'])){
 
 	$_post_title=isset($_POST['post_title'])?$_POST['post_title']:'';
 	$_post_status=isset($_POST['post_status'])?'publish':'draft';
@@ -125,7 +123,7 @@ if(isset($_POST['submit-save-exit']) || isset($_POST['submit-save'])){
 		update_post_meta($current_id, '_re_count',$_POST['re_count']);
 	}
 
-	if(isset($_POST['submit-save-exit'])){
+	if(isset($_POST['submit-save-back'])){
 		redirect();
 	}
 }
@@ -235,7 +233,7 @@ $type_options=array(
 				'text'=>__('文本模板消息','WPWPH'),
 				'news'=>__('图文模板消息','WPWPH'),
 				'recent' =>__("最近模板","WPWPH"),
-        'random' =>__("随机模板","WPWPH"),
+        		'random' =>__("随机模板","WPWPH"),
 				'search' =>__("搜索关键字","WPWPH")
 				);
 
@@ -434,21 +432,21 @@ $_status=($_post_status=='publish')?'checked':'';
 						</div>
 
 						<div id="resp_remsg" <?php echo $display_resp_remsg;?>>
-							<hr>
-							<h3 class="resp_remsg_recent">
-                <?php _e('最近模板','WPWPH');?>
-              </h3>
-							<h3 class="resp_remsg_random">
-                <?php _e('随机模板','WPWPH');?>
-              </h3>
-							<h3 class="resp_remsg_search">
-                <?php _e('搜索关键字','WPWPH');?>
-              </h3>
+						<hr>
+						<h3 class="resp_remsg_recent">
+			                <?php _e('最近模板','WPWPH');?>
+			             </h3>
+						<h3 class="resp_remsg_random">
+			                <?php _e('随机模板','WPWPH');?>
+			            </h3>
+						<h3 class="resp_remsg_search">
+			                <?php _e('搜索关键字','WPWPH');?>
+			            </h3>
 							<div class="msg-box">
 								<table class="form-table">
 								    <tr valign="top">
 								    	<th scope="row">
-                        <label><?php _e('Description','WPWPH');?></label>
+                        <label><?php _e('描述','WPWPH');?></label>
                       </th>
 									    <td>
                         <p class="resp_remsg_recent">
@@ -508,9 +506,9 @@ $_status=($_post_status=='publish')?'checked':'';
 
 					<hr>
 					<div class="func-submit">
-						<?php submit_button(__('保存并退出','WPWPH'),'primary','submit-save-exit', false); ?>&nbsp;&nbsp;
+						<?php submit_button(__('保存并返回','WPWPH'),'primary','submit-save-back', false); ?>&nbsp;
 						<?php submit_button(__('保存','WPWPH'),'secondary','submit-save', false); ?>&nbsp;
-						<a href="<?php echo menu_page_url(WPWPH_TEMPLATE_PAGE,false);?>" class="button secondary"><?php _e('取消','WPWPH');?></a>
+						<a href="<?php echo menu_page_url(WPWPH_TEMPLATE_PAGE,false);?>" class="button secondary"><?php _e('取消并返回','WPWPH');?></a>
 					</div>
 					<div class="clear"></div>
 					<?php if($current_id!=''):?>
