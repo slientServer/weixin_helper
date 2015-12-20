@@ -32,6 +32,7 @@ $token=isset($options['token'])?$options['token']:'';
 add_action('parse_request', 'load_wx_interface');
 function load_wx_interface(){
     global $token;
+   
     if($token!='' && isset($_GET[$token])){
     	require('wx_interface.php' );
     }
@@ -52,6 +53,14 @@ function create_history_table(){
     );";
     
     require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    dbDelta($sql);
+
+    $table_name ='wpwph_debug'; 
+    $sql = "CREATE TABLE $table_name (
+    id bigint(20) NOT NULL KEY AUTO_INCREMENT,  
+    content  varchar(2500) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
+    );";
+    
     dbDelta($sql);
 }
 

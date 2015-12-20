@@ -28,14 +28,23 @@ class wechatCallbackapi{
 			$this->data= $_data;
 		}
 	}
+
+	//debug专用函数
+	public function setField($data){
+		$messageRow = array("content"=>$data);
+		global $wpdb;
+		$rows_affected = $wpdb->insert("wpwph_debug", $messageRow);
+	}
 	
 	public function valid(){
 		if(isset($_GET["echostr"])){
 	    	$echoStr = $_GET["echostr"];
 	    }
+
 	    //valid signature , option
 	    if($this->checkSignature()){
 	    	if(isset($echoStr) && $echoStr!=''){
+				ob_clean();//解决url修改后token验证失败的问题
 	    		echo $echoStr;
 	    		exit;
 	    	}
@@ -47,18 +56,17 @@ class wechatCallbackapi{
 
   	public function responseMsg(){
     	//提取数据
-		// if (!empty($postStr) && $this->checkSignature() && $this->data){
-  		if(true){
+    	echo '0';
+		if ($this->checkSignature() && $this->data){
 
         	$postObj = $this->getHandleredData();
 			$msgType=$postObj->MsgType;
-
 			if($msgType=='event'){
 				$msg=$this->eventRespon($postObj);
 			}else{
 				$msg=$this->sendAutoReply($postObj);
 			}
-        
+
 			echo $msg;
         
         }else {
@@ -343,7 +351,7 @@ class wechatCallbackapi{
 			$des= $mediaObject->des;
 			$media=$this->parseurl($mediaObject->pic);
 			$url=$mediaObject->url;
-			$itemStr= sprintf($itemTemplate, $title, $des, $media, $url);
+			$itemStr .= sprintf($itemTemplate, $title, $des, $media, $url);
 			$mediaCount++;
 		}
 
