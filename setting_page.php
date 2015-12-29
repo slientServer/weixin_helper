@@ -39,6 +39,20 @@ $interface_url=isset($options['token']) && $options['token']!=''?home_url().'/?'
 		        	<p class="description"><?php _e('请输入微信公众平台Token,保存设置以后使用这个URL绑定到你的微信公众平台订阅号。','WPWPH')?></p>
 		        </td>
 	        </tr>
+	        <tr valign="top">
+		        <th scope="row"><label>Appid</label></th>
+		        <td>
+		        	<input type="text" size="30" name="<?php echo $this->option_name ;?>[appid]" value="<?php echo $options['appid'];?>" class="regular-text"/>
+		        	<p class="description"><?php _e('请输入微信公众平台APPID以获取access_token。','WPWPH')?></p>
+		        </td>
+	        </tr>
+	         <tr valign="top">
+		        <th scope="row"><label>Secret</label></th>
+		        <td>
+		        	<input type="text" size="30" name="<?php echo $this->option_name ;?>[secret]" value="<?php echo $options['secret'];?>" class="regular-text"/>
+		        	<p class="description"><?php _e('请输入微信公众平台SECRET以获取access_token。','WPWPH')?></p>
+		        </td>
+	        </tr>
 	    </table>
 		
 		<?php submit_button(); ?>

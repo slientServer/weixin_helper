@@ -16,6 +16,7 @@ define('WPWPH_GENERAL_PAGE', 'wpwph_general_page');
 define('WPWPH_SETTINGS_PAGE', 'wpwph_settings_page');
 define('WPWPH_HISTORY_PAGE', 'wpwph_history_page');
 define('WPWPH_TEMPLATE_PAGE', 'wpwph_template_page');
+define('WPWPH_MENU_PAGE', 'wpwph_menu_page');
 define('DB_TABLE_WPWPH_HISTORY', 'weixin_platform_helper_history');
 define('COUNT_PER_PAGE', 10);
 define('SELECT_ROWS_AMOUNT', 100);
@@ -28,6 +29,10 @@ define('MAX_SEARCH_LIMIT', 6);
 //Weixin Interface
 $options=get_option(WPWPH_SETTINGS_OPTION);
 global $token;
+global $appid;
+global $secret;
+$appid= isset($options['appid'])?$options['appid']:'';
+$secret= isset($options['secret'])?$options['secret']:'';
 $token=isset($options['token'])?$options['token']:'';
 add_action('parse_request', 'load_wx_interface');
 function load_wx_interface(){
@@ -64,6 +69,17 @@ function create_history_table(){
     dbDelta($sql);
 }
 
+function getAccessToken(){
+    global $appid;
+    global $secret;
+    $url= "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$appid."&secret=".$secret;
+    $ch= curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, true) ;
+    $res= curl_exec($ch);
+    curl_close($ch);
+    return json_decode($res)->access_token;
+}
 
 //微信公众平台管理
 add_action('_admin_menu', 'add_wx_admin_page');
@@ -82,10 +98,12 @@ function add_wx_admin_page(){
      require_once('class-wpwph-init.php');
      require_once('class-wpwph-history.php');
      require_once('class-wpwph-template.php');
+     require_once('class-wpwph-menu.php');
 
      WPWPH_Init::get_instance();
      WPWPH_History::get_instance();
      WPWPH_Template::get_instance();
+     WPWPH_Menu::get_instance();
          
     }
 }

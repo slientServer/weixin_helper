@@ -56,7 +56,6 @@ class wechatCallbackapi{
 
   	public function responseMsg(){
     	//提取数据
-    	echo '0';
 		if ($this->checkSignature() && $this->data){
 
         	$postObj = $this->getHandleredData();
@@ -66,9 +65,7 @@ class wechatCallbackapi{
 			}else{
 				$msg=$this->sendAutoReply($postObj);
 			}
-
 			echo $msg;
-        
         }else {
         	echo "";
         	exit;
@@ -107,7 +104,7 @@ class wechatCallbackapi{
 					break;
 				}
 			}
-		}
+		}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 		return $resultStr;
 	}
 
@@ -116,12 +113,45 @@ class wechatCallbackapi{
 	    $fromUsername = $postObj->FromUserName;
 	    $toUsername = $postObj->ToUserName;
 		$eventType=$postObj->Event;
+		$eventKey=$postObj->EventKey;
 		$resultStr='';
+		$is_match=false;
+		$is_subscribe=false;
 
 		foreach($this->data as $d){
 			if($d->trigger == $eventType){
+				$is_subscribe= true;
 				$resultStr =$this->get_msg_by_type($d, $fromUsername, $toUsername); 
 				break;
+			}
+		}
+
+		if(!$is_subscribe){
+			if($eventKey!=''){
+				foreach($this->data as $d){
+					if($d->trigger!='event'){
+						continue;
+					}
+					$curr_key=$d->key;
+					foreach($curr_key as $k){
+						if(strtolower($eventKey) == strtolower(trim($k))){
+							$is_match=true;
+						}
+					}
+					if($is_match){
+						$resultStr =$this->get_msg_by_type($d, $fromUsername, $toUsername);
+						break;
+					}
+					
+				}
+			}
+			if(!$is_match){
+				foreach($this->data as $d){
+					if($d->trigger=='default'){
+						$resultStr =$this->get_msg_by_type($d, $fromUsername, $toUsername); 
+						break;
+					}
+				}
 			}
 		}
 

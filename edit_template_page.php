@@ -148,6 +148,7 @@ $trigger_options=array(
 				'-'=>__('普通(关键字)','WPWPH'),
 				'default'=>__('默认','WPWPH'),
 				'subscribe'=>__('订阅','WPWPH'),
+				'event'=>__('事件','WPWPH'),
 				);
 
 //text message
@@ -318,6 +319,7 @@ $_status=($_post_status=='publish')?'checked':'';
 						        		<li><?php _e('&quot;普通&quot;: 通过关键字触发。','WPWPH');?></li>
 						        		<li><?php _e('&quot;默认&quot;: 关键字触发失败时发送。','WPWPH');?></li>
 						        		<li><?php _e('&quot;订阅&quot;: 陌生人成为订阅者时触发。','WPWPH');?></li>
+						        		<li><?php _e('&quot;事件&quot;: 按照事件key触发。','WPWPH');?></li>
 						        	</ul>
 						        </td>
 						    </tr>

@@ -393,3 +393,63 @@ WeChat Subscribers Lite
 #clear_all_records:hover{
 	color:#FFFFFF !important;
 }
+.hintColor{
+	color:#0769AD;
+	margin-left: 20px;
+}
+.headerFont{
+	font-size: 26px;
+  	font-weight: bold;
+  	margin-right: 10px;
+  	margin-top: 10px;
+}
+.block{
+	background: #FFFFFF;
+	padding: 10px;
+	border: 1px solid #dedede;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+	border-radius: 7px;
+}
+.firstMenu{
+	font-size: 22px;
+	font-style: italic;
+	margin-right: 20px;
+}
+.inlineDisplay{
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: block;
+}
+.subMenu{
+	font-size: 20px;
+    font-style: italic;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+.menuInput{
+	width: 22%;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+.addNewMenu{
+	float: right;
+	line-height: 22px;
+	font-weight: bold;
+	color: gray;
+	border-radius: 5px;
+	overflow: hidden;
+	cursor: pointer;
+}
+.deleteNewMenu{
+	float: right;
+	line-height: 22px;
+	font-weight: bold;
+	color: gray;
+	border-radius: 5px;
+	overflow: hidden;
+	cursor: pointer;
+}
+.typeList{
+	margin-left: 3%;
+}
